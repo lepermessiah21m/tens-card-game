@@ -33,14 +33,25 @@ function initGame() {
     const deck = Array.from({ length: 52 }, (_, index) => index);
     const shuffledDeck = shuffleDeck(deck);
 
+    // Create CPU 1's card array
+    createPlayerCards(shuffledDeck.slice(0, 15), 'cpu-container', true);
+
+    // Create Player 1's card array
+    createPlayerCards(shuffledDeck.slice(15, 30), 'card-container', false);
+}
+
+// Function to create player cards
+function createPlayerCards(playerDeck, containerId, isCPU) {
+    const container = document.getElementById(containerId);
+    
     const faceUpRow = document.createElement('div');
-    faceUpRow.id = 'face-up-row';
+    faceUpRow.id = isCPU ? 'cpu-face-up-row' : 'face-up-row';
     faceUpRow.className = 'card-row';
 
     // Create face-up cards
     const faceUpCards = [];
     for (let i = 0; i < 11; i++) {
-        const faceUpCard = createCard(shuffledDeck[i], true);
+        const faceUpCard = createCard(playerDeck[i], true);
         faceUpCards.push(faceUpCard);
     }
 
@@ -64,7 +75,7 @@ function initGame() {
     });
 
     const faceDownRow = document.createElement('div');
-    faceDownRow.id = 'face-down-row';
+    faceDownRow.id = isCPU ? 'cpu-face-down-row' : 'face-down-row';
     faceDownRow.className = 'card-row';
 
     // Create face-down cards
@@ -73,18 +84,33 @@ function initGame() {
         faceDownRow.appendChild(faceDownCard);
     }
 
-    // Create offset face-up cards
-    for (let i = 0; i < 4; i++) {
-        const offsetFaceUpCard = createCard(shuffledDeck[i + 11], true);
-        offsetFaceUpCard.style.position = 'absolute';
-        offsetFaceUpCard.style.top = `${109 + 30 - 10}px`;
-        offsetFaceUpCard.style.left = `calc(50% - 138px + ${i * (79 + 20) - 40}px)`;
-        offsetFaceUpCard.style.zIndex = 11 + i;
-        cardContainer.appendChild(offsetFaceUpCard);
-    }
+    if (isCPU) {
+        container.appendChild(faceUpRow);
+        container.appendChild(faceDownRow);
 
-    cardContainer.appendChild(faceUpRow);
-    cardContainer.appendChild(faceDownRow);
+        // Create offset face-up cards for CPU 1
+        for (let i = 0; i < 4; i++) {
+            const offsetFaceUpCard = createCard(playerDeck[i + 11], true);
+            offsetFaceUpCard.style.position = 'absolute';
+            offsetFaceUpCard.style.top = '159px';
+            offsetFaceUpCard.style.left = `calc(50% - 138px + ${i * (79 + 20) - 40}px)`;
+            offsetFaceUpCard.style.zIndex = 11 + i;
+            container.appendChild(offsetFaceUpCard);
+        }
+    } else {
+        // Create offset face-up cards for Player 1
+        for (let i = 0; i < 4; i++) {
+            const offsetFaceUpCard = createCard(playerDeck[i + 11], true);
+            offsetFaceUpCard.style.position = 'absolute';
+            offsetFaceUpCard.style.top = `${109 + 30 - 10}px`;
+            offsetFaceUpCard.style.left = `calc(50% - 138px + ${i * (79 + 20) - 40}px)`;
+            offsetFaceUpCard.style.zIndex = 11 + i;
+            container.appendChild(offsetFaceUpCard);
+        }
+
+        container.appendChild(faceUpRow);
+        container.appendChild(faceDownRow);
+    }
 }
 
 // Start the game
