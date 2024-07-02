@@ -18,15 +18,27 @@ function createCard(index, faceUp = true) {
     return card;
 }
 
+// Function to shuffle the deck
+function shuffleDeck(deck) {
+    for (let i = deck.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [deck[i], deck[j]] = [deck[j], deck[i]];
+    }
+    return deck;
+}
+
 // Function to initialize the game
 function initGame() {
+    const deck = Array.from({ length: 52 }, (_, index) => index);
+    const shuffledDeck = shuffleDeck(deck);
+
     const faceUpRow = document.createElement('div');
     faceUpRow.id = 'face-up-row';
     faceUpRow.className = 'card-row';
 
     // Create face-up cards
     for (let i = 0; i < 11; i++) {
-        const faceUpCard = createCard(i, true);
+        const faceUpCard = createCard(shuffledDeck[i], true);
         faceUpCard.style.zIndex = i;
         faceUpRow.appendChild(faceUpCard);
     }
@@ -43,7 +55,7 @@ function initGame() {
 
     // Create offset face-up cards
     for (let i = 0; i < 4; i++) {
-        const offsetFaceUpCard = createCard(i + 11, true);
+        const offsetFaceUpCard = createCard(shuffledDeck[i + 11], true);
         offsetFaceUpCard.style.position = 'absolute';
         offsetFaceUpCard.style.top = `${109 + 30 - 10}px`;
         offsetFaceUpCard.style.left = `calc(50% - 138px + ${i * (79 + 20) - 40}px)`;
