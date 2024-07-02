@@ -6,9 +6,11 @@ body {
 
 #game-board {
     display: flex;
-    justify-content: center;
-    align-items: flex-end;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
     height: 100vh;
+    position: relative;
 }
 
 #card-container {
@@ -16,7 +18,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .card {
@@ -49,4 +51,15 @@ body {
 
 #face-down-row .card:first-child {
     margin-left: 0;
+}
+
+#player-label {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
 }
