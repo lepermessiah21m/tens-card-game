@@ -20,11 +20,26 @@ function createCard(index, faceUp = true) {
 
 // Function to initialize the game
 function initGame() {
-    const faceUpCard = createCard(0, true);
-    const faceDownCard = createCard(0, false);
-    
-    cardContainer.appendChild(faceUpCard);
-    cardContainer.appendChild(faceDownCard);
+    const faceUpRow = document.createElement('div');
+    faceUpRow.className = 'card-row';
+
+    // Create face-up cards
+    for (let i = 0; i < 11; i++) {
+        const faceUpCard = createCard(i, true);
+        faceUpRow.appendChild(faceUpCard);
+    }
+
+    const faceDownRow = document.createElement('div');
+    faceDownRow.className = 'card-row';
+
+    // Create face-down cards
+    for (let i = 0; i < 4; i++) {
+        const faceDownCard = createCard(0, false);
+        faceDownRow.appendChild(faceDownCard);
+    }
+
+    cardContainer.appendChild(faceUpRow);
+    cardContainer.appendChild(faceDownRow);
 }
 
 // Start the game
