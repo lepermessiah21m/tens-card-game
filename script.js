@@ -6,6 +6,7 @@ const cardBackImage = 'assets/images/card-back.png';
 function createCard(index, faceUp = true) {
     const card = document.createElement('div');
     card.className = 'card';
+    card.dataset.value = index % 13;
     if (faceUp) {
         card.style.backgroundImage = `url('${cardSprite}')`;
         card.style.backgroundPosition = `${(index % 13) * -79}px ${Math.floor(index / 13) * -109}px`;
@@ -37,11 +38,30 @@ function initGame() {
     faceUpRow.className = 'card-row';
 
     // Create face-up cards
+    const faceUpCards = [];
     for (let i = 0; i < 11; i++) {
         const faceUpCard = createCard(shuffledDeck[i], true);
-        faceUpCard.style.zIndex = i;
-        faceUpRow.appendChild(faceUpCard);
+        faceUpCards.push(faceUpCard);
     }
+
+    // Sort the face-up cards based on their values
+    faceUpCards.sort((a, b) => {
+        const valueA = parseInt(a.dataset.value);
+        const valueB = parseInt(b.dataset.value);
+
+        // Place 10's on the right side
+        if (valueA === 9) return 1;
+        if (valueB === 9) return -1;
+
+        // Sort other cards normally
+        return valueA - valueB;
+    });
+
+    // Append the sorted face-up cards to the row
+    faceUpCards.forEach((card, index) => {
+        card.style.zIndex = index;
+        faceUpRow.appendChild(card);
+    });
 
     const faceDownRow = document.createElement('div');
     faceDownRow.id = 'face-down-row';
