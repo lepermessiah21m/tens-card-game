@@ -41,6 +41,16 @@ function initGame() {
         faceDownRow.appendChild(faceDownCard);
     }
 
+    // Create offset face-up cards
+    for (let i = 0; i < 4; i++) {
+        const offsetFaceUpCard = createCard(i + 11, true);
+        offsetFaceUpCard.style.position = 'absolute';
+        offsetFaceUpCard.style.top = `${109 + 30 - 10}px`;
+        offsetFaceUpCard.style.left = `calc(50% - 138px + ${i * (79 + 20) - 40}px)`;
+        offsetFaceUpCard.style.zIndex = 11 + i;
+        cardContainer.appendChild(offsetFaceUpCard);
+    }
+
     cardContainer.appendChild(faceUpRow);
     cardContainer.appendChild(faceDownRow);
 }
