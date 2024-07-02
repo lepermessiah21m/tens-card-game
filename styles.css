@@ -33,3 +33,11 @@ body {
     justify-content: center;
     margin-bottom: 10px;
 }
+
+#face-up-row .card {
+    margin-left: -59px;
+}
+
+#face-up-row .card:first-child {
+    margin-left: 0;
+}

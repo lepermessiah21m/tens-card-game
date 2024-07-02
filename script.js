@@ -21,15 +21,18 @@ function createCard(index, faceUp = true) {
 // Function to initialize the game
 function initGame() {
     const faceUpRow = document.createElement('div');
+    faceUpRow.id = 'face-up-row';
     faceUpRow.className = 'card-row';
 
     // Create face-up cards
     for (let i = 0; i < 11; i++) {
         const faceUpCard = createCard(i, true);
+        faceUpCard.style.zIndex = i;
         faceUpRow.appendChild(faceUpCard);
     }
 
     const faceDownRow = document.createElement('div');
+    faceDownRow.id = 'face-down-row';
     faceDownRow.className = 'card-row';
 
     // Create face-down cards
