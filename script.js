@@ -37,20 +37,46 @@ function promptNumPlayers() {
     return numPlayers;
 }
 
+// Function to calculate the number of decks needed based on the number of players
+function getNumDecks(numPlayers) {
+    const cardsPerPlayer = 19; // Each player gets 19 cards
+    const totalCardsRequired = numPlayers * cardsPerPlayer;
+    const numDecks = Math.ceil(totalCardsRequired / 52);
+    return numDecks;
+}
+
+// Function to create a combined deck of cards based on the number of decks
+function createCombinedDeck(numDecks) {
+    const combinedDeck = [];
+    for (let i = 0; i < numDecks; i++) {
+        for (let j = 0; j < 52; j++) {
+            combinedDeck.push(j);
+        }
+    }
+    return combinedDeck;
+}
+
 // Function to initialize the game
 function initGame() {
     const numPlayers = promptNumPlayers();
     console.log("Number of players:", numPlayers);
-    // TODO: Generate player card arrays based on the number of players
 
-    const deck = Array.from({ length: 52 }, (_, index) => index);
-    const shuffledDeck = shuffleDeck(deck);
+    const numDecks = getNumDecks(numPlayers);
+    console.log("Number of decks needed:", numDecks);
+
+    const combinedDeck = createCombinedDeck(numDecks);
+    console.log("Combined deck of cards:", combinedDeck);
+
+    const shuffledDeck = shuffleDeck(combinedDeck);
+    console.log("Shuffled deck of cards:", shuffledDeck);
+
+    // TODO: Dynamically generate player card arrays
 
     // Create CPU 1's card array
-    createPlayerCards(shuffledDeck.slice(0, 15), 'cpu-container', true);
+    createPlayerCards(shuffledDeck.slice(0, 19), 'player8-container', true);
 
     // Create Player 1's card array
-    createPlayerCards(shuffledDeck.slice(15, 30), 'card-container', false);
+    createPlayerCards(shuffledDeck.slice(19, 38), 'player1-container', false);
 }
 
 // Function to create player cards
