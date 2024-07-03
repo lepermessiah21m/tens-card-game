@@ -28,8 +28,21 @@ function shuffleDeck(deck) {
     return deck;
 }
 
+// Function to prompt the user for the number of players
+function promptNumPlayers() {
+    let numPlayers = parseInt(prompt("Enter the number of players (2-8):"));
+    while (isNaN(numPlayers) || numPlayers < 2 || numPlayers > 8) {
+        numPlayers = parseInt(prompt("Invalid input. Please enter a number between 2 and 8:"));
+    }
+    return numPlayers;
+}
+
 // Function to initialize the game
 function initGame() {
+    const numPlayers = promptNumPlayers();
+    console.log("Number of players:", numPlayers);
+    // TODO: Generate player card arrays based on the number of players
+
     const deck = Array.from({ length: 52 }, (_, index) => index);
     const shuffledDeck = shuffleDeck(deck);
 
@@ -43,7 +56,7 @@ function initGame() {
 // Function to create player cards
 function createPlayerCards(playerDeck, containerId, isCPU) {
     const container = document.getElementById(containerId);
-    
+
     const faceUpRow = document.createElement('div');
     faceUpRow.id = isCPU ? 'cpu-face-up-row' : 'face-up-row';
     faceUpRow.className = 'card-row';
