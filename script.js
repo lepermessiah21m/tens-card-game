@@ -101,39 +101,6 @@ function dealCards(players, shuffledDeck, dealerIndex) {
     }
 }
 
-// Function to initialize the game
-function initGame() {
-    const numPlayers = promptNumPlayers();
-    console.log("Number of players:", numPlayers);
-
-    const numDecks = getNumDecks(numPlayers);
-    console.log("Number of decks needed:", numDecks);
-
-    const combinedDeck = createCombinedDeck(numDecks);
-    console.log("Combined deck of cards:", combinedDeck);
-
-    const shuffledDeck = shuffleDeck(combinedDeck);
-    console.log("Shuffled deck of cards:", shuffledDeck);
-
-    const dealerId = selectDealer(numPlayers);
-    console.log("Dealer ID:", dealerId);
-
-    // Create an array to store player objects
-    const players = [];
-    for (let i = 0; i < numPlayers; i++) {
-        players.push({
-            id: i + 1,
-            hand: [],
-            piles: [[], [], [], []]
-        });
-    }
-
-    // Deal cards to players
-    dealCards(players, shuffledDeck, dealerId - 1);
-
-    // TODO: Create player card arrays based on the dealt cards
-}
-
 // Function to create player cards
 function createPlayerCards(playerDeck, containerId, isCPU) {
     const container = document.getElementById(containerId);
@@ -205,6 +172,119 @@ function createPlayerCards(playerDeck, containerId, isCPU) {
         container.appendChild(faceUpRow);
         container.appendChild(faceDownRow);
     }
+}
+
+// Function to create player card arrays based on the dealt cards
+function createPlayerCardArrays(players) {
+    const playerCardArrays = [];
+
+    for (let i = 0; i < players.length; i++) {
+        const player = players[i];
+        const isHumanPlayer = player.id === 1;
+
+        const faceUpRow = document.createElement('div');
+        faceUpRow.className = 'card-row';
+
+        // Create face-up cards for the player's hand
+        const faceUpCards = [];
+        for (let j = 0; j < player.hand.length; j++) {
+            const card = player.hand[j];
+            const faceUpCard = createCard(card, isHumanPlayer);
+            faceUpCards.push(faceUpCard);
+        }
+
+        // Sort the face-up cards based on their values
+        faceUpCards.sort((a, b) => {
+            const valueA = parseInt(a.dataset.value);
+            const valueB = parseInt(b.dataset.value);
+
+            // Place 10's on the right side
+            if (valueA === 9) return 1;
+            if (valueB === 9) return -1;
+
+            // Sort other cards normally
+            return valueA - valueB;
+        });
+
+        // Append the sorted face-up cards to the row
+        faceUpCards.forEach((card, index) => {
+            card.style.zIndex = index;
+            faceUpRow.appendChild(card);
+        });
+
+        const pileRows = [];
+        for (let j = 0; j < player.piles.length; j++) {
+            const pileRow = document.createElement('div');
+            pileRow.className = 'card-row';
+
+            // Create face-down card for the pile
+            const faceDownCard = createCard(player.piles[j][0], false);
+            pileRow.appendChild(faceDownCard);
+
+            // Create face-up card for the pile
+            const faceUpCard = createCard(player.piles[j][1], isHumanPlayer);
+            pileRow.appendChild(faceUpCard);
+
+            pileRows.push(pileRow);
+        }
+
+        playerCardArrays.push({
+            playerId: player.id,
+            faceUpRow,
+            pileRow: pileRows
+        });
+    }
+
+    return playerCardArrays;
+}
+
+// Function to initialize the game
+function initGame() {
+    const numPlayers = promptNumPlayers();
+    console.log("Number of players:", numPlayers);
+
+    const numDecks = getNumDecks(numPlayers);
+    console.log("Number of decks needed:", numDecks);
+
+    const combinedDeck = createCombinedDeck(numDecks);
+    console.log("Combined deck of cards:", combinedDeck);
+
+    const shuffledDeck = shuffleDeck(combinedDeck);
+    console.log("Shuffled deck of cards:", shuffledDeck);
+
+    const dealerId = selectDealer(numPlayers);
+    console.log("Dealer ID:", dealerId);
+
+    // Create an array to store player objects
+    const players = [];
+    for (let i = 0; i < numPlayers; i++) {
+        players.push({
+            id: i + 1,
+            hand: [],
+            piles: [[], [], [], []]
+        });
+    }
+
+    // Convert dealerId to dealerIndex
+    const dealerIndex = dealerId - 1;
+
+    // Deal cards to players
+    dealCards(players, shuffledDeck, dealerIndex);
+
+    // Create player card arrays based on the dealt cards
+    const playerCardArrays = createPlayerCardArrays(players);
+
+    // Render the player card arrays on the game board
+playerCardArrays.forEach(cardArray => {
+    const playerContainer = document.getElementById(`player${cardArray.playerId}-container`);
+    playerContainer.appendChild(cardArray.faceUpRow);
+    const pileRow = document.createElement('div');
+    pileRow.className = 'pile-row';
+    cardArray.pileRow.forEach(pile => {
+        pileRow.appendChild(pile);
+    });
+    playerContainer.appendChild(pileRow);
+});
 }
 
 // Start the game
