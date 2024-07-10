@@ -56,6 +56,11 @@ function createCombinedDeck(numDecks) {
     return combinedDeck;
 }
 
+// Function to randomly select the dealer
+function selectDealer(numPlayers) {
+    return Math.floor(Math.random() * numPlayers) + 1;
+}
+
 // Function to initialize the game
 function initGame() {
     const numPlayers = promptNumPlayers();
@@ -69,6 +74,11 @@ function initGame() {
 
     const shuffledDeck = shuffleDeck(combinedDeck);
     console.log("Shuffled deck of cards:", shuffledDeck);
+
+    const dealerId = selectDealer(numPlayers);
+    console.log("Dealer ID:", dealerId);
+
+    // TODO: Implement card dealing logic
 
     // TODO: Dynamically generate player card arrays
 
