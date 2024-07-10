@@ -61,6 +61,46 @@ function selectDealer(numPlayers) {
     return Math.floor(Math.random() * numPlayers) + 1;
 }
 
+// Function to deal cards to players
+function dealCards(players, shuffledDeck, dealerIndex) {
+    const numPlayers = players.length;
+    let currentPlayerIndex = (dealerIndex + 1) % numPlayers;
+    let cardIndex = 0;
+
+    // Deal 11 cards to each player's hand
+    for (let i = 0; i < 11; i++) {
+        for (let j = 0; j < numPlayers; j++) {
+            const player = players[currentPlayerIndex];
+            const card = shuffledDeck[cardIndex];
+            player.hand.push(card);
+            cardIndex++;
+            currentPlayerIndex = (currentPlayerIndex + 1) % numPlayers;
+        }
+    }
+
+    // Deal 4 face-down cards to each player's piles
+    for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < numPlayers; j++) {
+            const player = players[currentPlayerIndex];
+            const card = shuffledDeck[cardIndex];
+            player.piles[i].push(card);
+            cardIndex++;
+            currentPlayerIndex = (currentPlayerIndex + 1) % numPlayers;
+        }
+    }
+
+    // Deal 4 face-up cards to each player's piles
+    for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < numPlayers; j++) {
+            const player = players[currentPlayerIndex];
+            const card = shuffledDeck[cardIndex];
+            player.piles[i].push(card);
+            cardIndex++;
+            currentPlayerIndex = (currentPlayerIndex + 1) % numPlayers;
+        }
+    }
+}
+
 // Function to initialize the game
 function initGame() {
     const numPlayers = promptNumPlayers();
@@ -78,15 +118,20 @@ function initGame() {
     const dealerId = selectDealer(numPlayers);
     console.log("Dealer ID:", dealerId);
 
-    // TODO: Implement card dealing logic
+    // Create an array to store player objects
+    const players = [];
+    for (let i = 0; i < numPlayers; i++) {
+        players.push({
+            id: i + 1,
+            hand: [],
+            piles: [[], [], [], []]
+        });
+    }
 
-    // TODO: Dynamically generate player card arrays
+    // Deal cards to players
+    dealCards(players, shuffledDeck, dealerId - 1);
 
-    // Create CPU 1's card array
-    createPlayerCards(shuffledDeck.slice(0, 19), 'player8-container', true);
-
-    // Create Player 1's card array
-    createPlayerCards(shuffledDeck.slice(19, 38), 'player1-container', false);
+    // TODO: Create player card arrays based on the dealt cards
 }
 
 // Function to create player cards
